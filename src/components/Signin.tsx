@@ -8,19 +8,33 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
 function Signin() {
+  const navigate = useNavigate();
+
+  const appContext = useAuth();
+  if (!appContext) return null;
+  const {signin} = appContext;
+
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const email = data.get('email')?.toString();
+    const password = data.get('password')?.toString();
+    if(email && password){
+      signin(email, password);
+      navigate("/")
+    }
+    // console.log({
+    //   email: data.get('email'),
+    //   password: data.get('password'),
+    // });
   };
 
   return (
