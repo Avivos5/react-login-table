@@ -34,7 +34,6 @@ function Signin() {
   });
 
   const onSubmit: SubmitHandler<IFormInput> = data => {
-    console.log(data)
     signin(data.email.toString(), data.password.toString());
     navigate("/")
   };

@@ -1,10 +1,24 @@
 import Button from '@mui/material/Button';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { AppService } from '../services/AppService';
 
 function Dashboard() {
 
    const navigate = useNavigate();
+   const appService = new AppService();
+
+   const getAllStudMarks = async () => {
+      const response = await appService.getStudMarks();
+      console.log(response);
+   }
+
+
+   useEffect(() => {
+      getAllStudMarks();
+   })
+
 
    const appContext = useAuth();
    if (!appContext) return null;
