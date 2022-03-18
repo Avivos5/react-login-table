@@ -10,32 +10,38 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from 'react-router-dom';
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
 const theme = createTheme();
+
+interface IFormInput {
+  email: string;
+  password: string;
+}
+
+const schema = yup.object({
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+}).required();
 
 function Signin() {
   const navigate = useNavigate();
 
+  const { register, control, handleSubmit, formState: { errors }  } = useForm<IFormInput>({
+    resolver: yupResolver(schema)
+  });
+
+  const onSubmit: SubmitHandler<IFormInput> = data => {
+    console.log(data)
+    signin(data.email.toString(), data.password.toString());
+    navigate("/")
+  };
+
   const appContext = useAuth();
   if (!appContext) return null;
   const {signin} = appContext;
-
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    
-    const data = new FormData(event.currentTarget);
-    const email = data.get('email')?.toString();
-    const password = data.get('password')?.toString();
-    if(email && password){
-      signin(email, password);
-      navigate("/")
-    }
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -55,27 +61,44 @@ function Signin() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
+                <Controller
                   name="email"
-                  autoComplete="email"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                    {...field}
+                    {...register("email")}
+                    error={errors.email != null}
+                    helperText={errors.email?.message}
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    />)}
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
+                <Controller
                   name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                    {...field}
+                    {...register("password")}
+                    error={errors.password != null}
+                    helperText={errors.password?.message}
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    />)}
                 />
               </Grid>
             </Grid>
