@@ -73,7 +73,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             </TableSortLabel>
           </TableCell>
         ))}
-        <TableCell />
+        <TableCell padding="checkbox" />
       </TableRow>
     </TableHead>
   );

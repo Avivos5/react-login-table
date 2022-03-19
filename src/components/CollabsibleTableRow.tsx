@@ -34,7 +34,7 @@ export default function CollapsibleTableRow(props: { student: Data, isItemSelect
         <TableCell>{student.points}</TableCell>
         <TableCell>{student.exam_date}</TableCell>
         <TableCell>{student.subject}</TableCell>
-        <TableCell>
+        <TableCell padding="checkbox">
             <IconButton
               aria-label="expand row"
               size="small"

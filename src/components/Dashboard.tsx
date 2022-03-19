@@ -61,6 +61,7 @@ function Dashboard() {
    const [order, setOrder] = useState<Order>("asc");
    const [orderBy, setOrderBy] = useState<keyof Data>("first_name");
    const [selected, setSelected] = useState<readonly number[]>([]);
+   const [dataLoading, setDataLoading] = useState(true);
    const [allTableContent, setAllTableContent] = useState<Data[]>([]);
    const [tableContent, setTableContent] = useState<Data[]>([]);
    const [lastNameFilter, setLastNameFilter] = useState('');
@@ -122,6 +123,7 @@ function Dashboard() {
       console.log(response);
       setTableContent(response);
       setAllTableContent(response);
+      setDataLoading(false);
    }
 
    useEffect(() => { getAllStudMarks() }, []);
@@ -135,7 +137,7 @@ function Dashboard() {
   return ( 
      <>
       <NavBar />
-      {tableContent.length ?
+      {!dataLoading ?
         <>
          <Box
             component="form"
@@ -188,50 +190,78 @@ function Dashboard() {
             </Select>
             </FormControl>
          </Box>
-          <Box sx={{ width: "90%", margin: "25px auto" }}>
-            <Paper sx={{ width: "100%", mb: 2 }}>
-            <TableContainer>
-               <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-                  <EnhancedTableHead
-                  order={order}
-                  orderBy={orderBy}
-                  onRequestSort={handleRequestSort}
-                  />
-                  <TableBody>
-                  {tableContent
-                     .slice()
-                     .sort(getComparator(order, orderBy))
-                     .map((student, index) => {
-                        const isItemSelected = isSelected(student.id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
+         {tableContent.length ?
+            <>
+               <Box sx={{ width: "90%", margin: "25px auto" }}>
+               <Paper sx={{ width: "100%", mb: 2 }}>
+               <TableContainer>
+                  <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+                     <EnhancedTableHead
+                     order={order}
+                     orderBy={orderBy}
+                     onRequestSort={handleRequestSort}
+                     />
+                     <TableBody>
+                     {tableContent
+                        .slice()
+                        .sort(getComparator(order, orderBy))
+                        .map((student, index) => {
+                           const isItemSelected = isSelected(student.id);
+                           const labelId = `enhanced-table-checkbox-${index}`;
 
-                        return (
-                           <CollapsibleTableRow 
-                              key={student.id}
-                              student={student} 
-                              isItemSelected={isItemSelected}
-                              labelId={labelId}
-                              handleClick={handleClick}
-                           />
-                        );
-                     })}
-                  </TableBody>
-               </Table>
-            </TableContainer>
-            </Paper>
+                           return (
+                              <CollapsibleTableRow 
+                                 key={student.id}
+                                 student={student} 
+                                 isItemSelected={isItemSelected}
+                                 labelId={labelId}
+                                 handleClick={handleClick}
+                              />
+                           );
+                        })}
+                     </TableBody>
+                  </Table>
+               </TableContainer>
+               </Paper>
+               </Box>
+            </>
+            :
+            <Box sx={{
+               margin: "50px auto",
+               display: "flex",
+               justifyContent: "center"
+            }}>
+               <Box
+                  sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  '& > :not(style)': {
+                     margin: "auto",
+                     padding: "10px 50px"
+                  },
+                  }}
+               >
+                  <Paper 
+                  elevation={3}
+                  sx={{
+                     textAlign: "center"   
+                  }}
+                  >
+                     <p>Such empty :(</p>
+                  </Paper>
+               </Box>
          </Box>
-        </>
-        :
-        <Box sx={{
-            margin: "50px auto",
-            display: "flex",
-            justifyContent: "center"
-         }}>
-         <CircularProgress/>
-      </Box>
-      }
-     
-    
+         }
+      </>
+      :
+      <Box sx={{
+         margin: "50px auto",
+         display: "flex",
+         justifyContent: "center"
+      }}>
+      <CircularProgress/>
+   </Box>
+   }
    </>
    );
 }
