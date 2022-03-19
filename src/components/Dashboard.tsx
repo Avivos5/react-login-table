@@ -11,6 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import NavBar from './NavBar';
  export interface Data {
    id: number;
    first_name: string;
@@ -54,7 +55,6 @@ function Dashboard() {
 
    const isSelected = (name: number) => selected.indexOf(name) !== -1;
 
-   const navigate = useNavigate();
    const appService = new AppService();
 
    const handleRequestSort = (
@@ -95,21 +95,10 @@ function Dashboard() {
       getAllStudMarks();
    }, [])
 
-   const appContext = useAuth();
-   if (!appContext) return null;
-   const {logout} = appContext;
-
-   const handleLogout = () : void =>{
-      logout();
-      navigate("/sign-in")
-   }
-
   return ( 
      <>
-      <h1>Dashboard</h1>
-      <Button variant="contained" onClick={handleLogout}>Logout</Button>
-
-      <Box sx={{ width: "90%", margin: "auto" }}>
+      <NavBar />
+      <Box sx={{ width: "90%", margin: "25px auto" }}>
          <Paper sx={{ width: "100%", mb: 2 }}>
          <TableContainer>
             <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
