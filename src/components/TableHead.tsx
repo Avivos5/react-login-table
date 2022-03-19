@@ -73,6 +73,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             </TableSortLabel>
           </TableCell>
         ))}
+        <TableCell />
       </TableRow>
     </TableHead>
   );

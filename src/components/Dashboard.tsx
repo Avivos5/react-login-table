@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import { AppService } from '../services/AppService';
-import Button from '@mui/material/Button';
 import EnhancedTableHead from './TableHead';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import NavBar from './NavBar';
+import CollapsibleTableRow from './CollabsibleTableRow';
+
  export interface Data {
    id: number;
    first_name: string;
    last_name: string;
    points: number;
    exam_date: string;
-   subject: string
+   subject: string,
+   notes: string
  }
  
  export type Order = "asc" | "desc";
@@ -116,26 +114,13 @@ function Dashboard() {
                      const labelId = `enhanced-table-checkbox-${index}`;
 
                      return (
-                     <TableRow
-                        hover
-                        onClick={(event) => handleClick(event, student.id)}
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={student.id}
-                        selected={isItemSelected}
-                     >
-                        <TableCell
-                           component="th"
-                           id={labelId}
-                           scope="row"
-                        >
-                           {student.first_name}
-                        </TableCell>
-                        <TableCell>{student.last_name}</TableCell>
-                        <TableCell>{student.points}</TableCell>
-                        <TableCell>{student.exam_date}</TableCell>
-                        <TableCell>{student.subject}</TableCell>
-                     </TableRow>
+                        <CollapsibleTableRow 
+                           key={student.id}
+                           student={student} 
+                           isItemSelected={isItemSelected}
+                           labelId={labelId}
+                           handleClick={handleClick}
+                        />
                      );
                   })}
                </TableBody>
