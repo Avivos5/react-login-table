@@ -6,6 +6,7 @@ import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import NavBar from './NavBar';
 import CollapsibleTableRow from './CollabsibleTableRow';
 
@@ -96,38 +97,51 @@ function Dashboard() {
   return ( 
      <>
       <NavBar />
-      <Box sx={{ width: "90%", margin: "25px auto" }}>
-         <Paper sx={{ width: "100%", mb: 2 }}>
-         <TableContainer>
-            <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-               <EnhancedTableHead
-               order={order}
-               orderBy={orderBy}
-               onRequestSort={handleRequestSort}
-               />
-               <TableBody>
-               {tableContent
-                  .slice()
-                  .sort(getComparator(order, orderBy))
-                  .map((student, index) => {
-                     const isItemSelected = isSelected(student.id);
-                     const labelId = `enhanced-table-checkbox-${index}`;
+      {tableContent.length ?
+        <>
+          <Box sx={{ width: "90%", margin: "25px auto" }}>
+            <Paper sx={{ width: "100%", mb: 2 }}>
+            <TableContainer>
+               <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+                  <EnhancedTableHead
+                  order={order}
+                  orderBy={orderBy}
+                  onRequestSort={handleRequestSort}
+                  />
+                  <TableBody>
+                  {tableContent
+                     .slice()
+                     .sort(getComparator(order, orderBy))
+                     .map((student, index) => {
+                        const isItemSelected = isSelected(student.id);
+                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                     return (
-                        <CollapsibleTableRow 
-                           key={student.id}
-                           student={student} 
-                           isItemSelected={isItemSelected}
-                           labelId={labelId}
-                           handleClick={handleClick}
-                        />
-                     );
-                  })}
-               </TableBody>
-            </Table>
-         </TableContainer>
-         </Paper>
+                        return (
+                           <CollapsibleTableRow 
+                              key={student.id}
+                              student={student} 
+                              isItemSelected={isItemSelected}
+                              labelId={labelId}
+                              handleClick={handleClick}
+                           />
+                        );
+                     })}
+                  </TableBody>
+               </Table>
+            </TableContainer>
+            </Paper>
+         </Box>
+        </>
+        :
+        <Box sx={{
+            margin: "50px auto",
+            display: "flex",
+            justifyContent: "center"
+         }}>
+         <CircularProgress/>
       </Box>
+      }
+     
     
    </>
    );
