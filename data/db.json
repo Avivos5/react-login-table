@@ -4,32 +4,32 @@
      "id": 0,
      "first_name": "Jerry",
      "last_name": "Gleason",
-     "points": "50",
-     "last_exam_date": "2022-02-19",
+     "points": 50,
+     "exam_date": "2022-02-19",
      "subject": "chemistry"
    },
    {
     "id": 1,
     "first_name": "Theo",
     "last_name": "Schamberger",
-    "points": "34",
-    "last_exam_date": "2022-01-27",
+    "points": 34,
+    "exam_date": "2022-01-27",
     "subject": "science"
   },
   {
     "id": 2,
     "first_name": "Oretha",
     "last_name": "Roob",
-    "points": "102",
-    "last_exam_date": "2021-12-12",
+    "points": 102,
+    "exam_date": "2021-12-12",
     "subject": "math"
   },
   {
     "id": 3,
     "first_name": "Tinisha",
     "last_name": "Adams",
-    "points": "90",
-    "last_exam_date": "2022-03-12",
+    "points": 90,
+    "exam_date": "2022-03-12",
     "subject": "geography"
   },
   {
@@ -37,7 +37,7 @@
     "first_name": "Adam",
     "last_name": "Kirlin",
     "points": "12",
-    "last_exam_date": "2022-03-01",
+    "exam_date": "2022-03-01",
     "subject": "math"
   }
  ]
