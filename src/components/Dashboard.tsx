@@ -9,6 +9,17 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import NavBar from './NavBar';
 import CollapsibleTableRow from './CollabsibleTableRow';
+import { TextField } from '@mui/material';
+import DateAdapter from "@date-io/date-fns";
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+
+
+
 
  export interface Data {
    id: number;
@@ -50,7 +61,29 @@ function Dashboard() {
    const [order, setOrder] = useState<Order>("asc");
    const [orderBy, setOrderBy] = useState<keyof Data>("first_name");
    const [selected, setSelected] = useState<readonly number[]>([]);
+   const [allTableContent, setAllTableContent] = useState<Data[]>([]);
    const [tableContent, setTableContent] = useState<Data[]>([]);
+   const [lastNameFilter, setLastNameFilter] = useState('');
+   const [examDateFilter, setExamDateFilter] = useState<Date | null>(null);
+   const [subjectFilter, setSubjectFilter] = useState('');
+
+   const queryChanged = () => {
+      let studentsToFilter: Data[] = [...allTableContent]; 
+
+      if(!(lastNameFilter === ""))
+      studentsToFilter = studentsToFilter.filter(student => student.last_name.toUpperCase().includes(lastNameFilter.toUpperCase()));
+
+      if(!(examDateFilter === null))
+      studentsToFilter = studentsToFilter.filter(student => {
+         const studDate = new Date(student.exam_date);
+         return (studDate >= examDateFilter);
+      });
+
+      if(!(subjectFilter === ""))
+      studentsToFilter = studentsToFilter.filter(student => student.subject.toUpperCase().includes(subjectFilter.toUpperCase()));
+
+      setTableContent(studentsToFilter);
+  }
 
    const isSelected = (name: number) => selected.indexOf(name) !== -1;
 
@@ -88,17 +121,73 @@ function Dashboard() {
       const response = await appService.getStudMarks();
       console.log(response);
       setTableContent(response);
+      setAllTableContent(response);
    }
 
-   useEffect(() => {
-      getAllStudMarks();
-   }, [])
+   useEffect(() => { getAllStudMarks() }, []);
+
+   useEffect(() => { queryChanged() }, [lastNameFilter])
+  
+  useEffect(() => { queryChanged() }, [examDateFilter])
+
+  useEffect(() => { queryChanged() }, [subjectFilter])
 
   return ( 
      <>
       <NavBar />
       {tableContent.length ?
         <>
+         <Box
+            component="form"
+            sx={{
+            '& > :not(style)': { m: 1, width: '25ch' },
+            width: "90%",
+            margin: "25px auto 0",
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: '20px'
+            
+            }}
+            noValidate
+            autoComplete="off"
+         >
+            <TextField 
+            label="Last Name" 
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+               setLastNameFilter(event.target.value);
+            }}/>
+            <LocalizationProvider dateAdapter={DateAdapter}>
+               <DatePicker
+               label="Exam Date (later than)"
+               value={examDateFilter}
+               onChange={(newValue) => {
+                  setExamDateFilter(newValue);
+                  console.log(newValue);
+               }}
+               renderInput={(params: any) => <TextField {...params} />}
+               />
+            </LocalizationProvider>
+            <FormControl fullWidth>
+            <InputLabel>Subject</InputLabel>
+            <Select
+               value={subjectFilter}
+               label="Subject"
+               onChange={(event: SelectChangeEvent) => {
+                  setSubjectFilter(event.target.value);
+                  console.log(event.target.value)
+                }}
+            >
+               <MenuItem value="">
+                  <em>None</em>
+               </MenuItem>
+               <MenuItem value={"chemistry"}>Chemistry</MenuItem>
+               <MenuItem value={"science"}>Science</MenuItem>
+               <MenuItem value={"math"}>Math</MenuItem>
+               <MenuItem value={"geography"}>Geography</MenuItem>
+            </Select>
+            </FormControl>
+         </Box>
           <Box sx={{ width: "90%", margin: "25px auto" }}>
             <Paper sx={{ width: "100%", mb: 2 }}>
             <TableContainer>
