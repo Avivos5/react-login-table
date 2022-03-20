@@ -247,7 +247,7 @@ function Dashboard() {
                      textAlign: "center"   
                   }}
                   >
-                     <p>Such empty :(</p>
+                     <p>Such empty 😢</p>
                   </Paper>
                </Box>
          </Box>
